@@ -63,6 +63,8 @@ spark = SparkSession.builder \
     .appName("Analyse de Sentiments") \
     .getOrCreate()
 
+# COMMAND ----------
+
 # Chargement des tweets dans un DataFrame Spark
 tweets_data = [(tweet.text,) for tweet in tweets_fr.data]
 tweets_df = spark.createDataFrame(tweets_data, ["tweet"])
