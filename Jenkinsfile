@@ -8,10 +8,13 @@ pipeline {
                 git 'https://github.com/A-nicolas/Analyse-de-Sentiment.git'
             }
         }
-        stage('Build') {
+        stage('Deploy') {
             steps {
-                // Installation des dépendances Python
-                sh 'pip install -r requirements.txt'
+                // Connexion à Databricks (à configurer au préalable)
+                sh 'databricks configure --token'
+                
+                // Importer le script sur Databricks
+                sh 'databricks workspace import -f notebook_app.py /Workspace/Repos/nicolas@lepont-learning.com/Analyse-de-Sentiment/notebook_app.py'
             }
         }
     }
