@@ -52,4 +52,10 @@ tweets_with_sentiment = preprocessed_tweets_df.withColumn("sentiment", sentiment
 
 # Affichage des résultats
 display(tweets_with_sentiment)
+tweets_with_sentiment.write.saveAsTable("analyse_de_sentiments")
 
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC SELECT *
+# MAGIC FROM analyse_de_sentiments

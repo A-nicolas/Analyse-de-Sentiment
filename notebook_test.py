@@ -7,8 +7,6 @@ pip install pytest
 
 # COMMAND ----------
 
-
-
 # Définissez les fonctions de test avec pytest
 def test_clean_tweet():
     tweet = "Ce est un tweet de test avec des @mentions et des #hashtags !"
