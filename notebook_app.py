@@ -1,33 +1,25 @@
 # Databricks notebook source
-pip install tweepy nltk pyspark textblob
+# DBTITLE 1,Installation et chargement des dépendances
+# MAGIC %run ./notebook_dependances
 
 # COMMAND ----------
 
-# Databricks notebook source
-import tweepy
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import udf
-from pyspark.sql.types import StringType
-#from fonctions import clean_tweet, tokenize_tweet, remove_stopwords, analyze_sentiment
-
-
-# COMMAND ----------
-
-client = tweepy.Client(bearer_token="AAAAAAAAAAAAAAAAAAAAABHvtQEAAAAAZYZuSyP3Xt5GNPVE8SDaFL8km%2FE%3DHWxI0NcvZzQYB28eJummwmZ8zfb20lLBMHkpzERg4oLF9tFktq")
-
-# COMMAND ----------
-
-query = "Vinicius lang:fr -is:retweet -is:reply"
-max_results = 10
-
-tweets_fr = client.search_recent_tweets(query=query, tweet_fields=['text'], max_results=max_results)
-
-# COMMAND ----------
-
+# DBTITLE 1,Chargement des fonctions
+# MAGIC
 # MAGIC %run ./notebook_fonctions
 
 # COMMAND ----------
 
+# DBTITLE 1,Connection à l'API Twitter et requête
+client = tweepy.Client(bearer_token="AAAAAAAAAAAAAAAAAAAAABHvtQEAAAAAZYZuSyP3Xt5GNPVE8SDaFL8km%2FE%3DHWxI0NcvZzQYB28eJummwmZ8zfb20lLBMHkpzERg4oLF9tFktq")
+
+query = "Vinicius lang:fr -is:retweet -is:reply"
+
+tweets_fr = client.search_recent_tweets(query=query, tweet_fields=['text'], max_results=10)
+
+# COMMAND ----------
+
+# DBTITLE 1,Ingestion, nettoyage et analyse des données
 # Création de la session Spark
 spark = SparkSession.builder \
     .appName("Analyse de Sentiments") \
@@ -52,10 +44,6 @@ tweets_with_sentiment = preprocessed_tweets_df.withColumn("sentiment", sentiment
 
 # Affichage des résultats
 display(tweets_with_sentiment)
-tweets_with_sentiment.write.saveAsTable("analyse_de_sentiments")
 
-# COMMAND ----------
-
-# MAGIC %sql
-# MAGIC SELECT *
-# MAGIC FROM analyse_de_sentiments
+#Insertion des données dans une table
+tweets_with_sentiment.write.mode("overwrite").saveAsTable("analyse_de_sentiments")

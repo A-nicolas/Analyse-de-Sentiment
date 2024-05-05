@@ -1,16 +1,4 @@
 # Databricks notebook source
-pip install nltk textblob
-
-# COMMAND ----------
-
-import re
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from textblob import TextBlob
-import nltk
-nltk.download('punkt')
-nltk.download('stopwords')
-
 def clean_tweet(tweet):
     tweet = re.sub(r'http\S+', '', tweet)  # Supprimer les URL
     tweet = re.sub(r'@\w+', '', tweet)     # Supprimer les mentions
