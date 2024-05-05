@@ -3,17 +3,13 @@ pip install tweepy nltk pyspark textblob
 
 # COMMAND ----------
 
+# Databricks notebook source
 import tweepy
-import re
-from nltk.tokenize import word_tokenize
-from nltk.corpus import stopwords
-from textblob import TextBlob
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import udf
-from pyspark.sql.types import StringType, FloatType
-import nltk
-nltk.download('punkt')
-nltk.download('stopwords')
+from pyspark.sql.types import StringType
+#from fonctions import clean_tweet, tokenize_tweet, remove_stopwords, analyze_sentiment
+
 
 # COMMAND ----------
 
@@ -28,33 +24,7 @@ tweets_fr = client.search_recent_tweets(query=query, tweet_fields=['text'], max_
 
 # COMMAND ----------
 
-# Nettoyage des tweets
-def clean_tweet(tweet):
-    tweet = re.sub(r'http\S+', '', tweet)  # Supprimer les URL
-    tweet = re.sub(r'@\w+', '', tweet)     # Supprimer les mentions
-    tweet = re.sub(r'#\w+', '', tweet)     # Supprimer les hashtags
-    tweet = re.sub(r'[^\w\s]', '', tweet)  # Supprimer les caractères spéciaux
-    return tweet
-
-# Tokenisation
-def tokenize_tweet(tweet):
-    return word_tokenize(tweet)
-
-# Filtration des stop-words : mots inutiles
-def remove_stopwords(tokens):
-    stop_words = set(stopwords.words('french'))
-    return [token for token in tokens if token.lower() not in stop_words]
-
-# Fonction d'analyse de sentiment avec TextBlob
-def analyze_sentiment(tweet):
-    blob = TextBlob(tweet)
-    sentiment = blob.sentiment.polarity
-    if sentiment > 0:
-        return "positif"
-    elif sentiment < 0:
-        return "négatif"
-    else:
-        return "neutre"
+# MAGIC %run ./notebook_fonctions
 
 # COMMAND ----------
 
@@ -81,6 +51,5 @@ sentiment_udf = udf(analyze_sentiment, StringType())
 tweets_with_sentiment = preprocessed_tweets_df.withColumn("sentiment", sentiment_udf("tweet_nettoyé"))
 
 # Affichage des résultats
-#tweets_with_sentiment.show()
 display(tweets_with_sentiment)
 
