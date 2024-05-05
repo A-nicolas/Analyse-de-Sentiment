@@ -8,5 +8,12 @@ pipeline {
                 git 'https://github.com/A-nicolas/Analyse-de-Sentiment.git'
             }
         }
+        stage('Build') {
+            steps {
+                // Installation des dépendances Python
+                sh 'pip install -r requirements.txt'
+            }
+        }
     }
+    
 }
