@@ -36,8 +36,8 @@ tweets_with_sentiment = preprocessed_tweets_data_df.withColumn("sentiment", sent
 # Supprimer les doublons avant d'insérer dans la table
 unique_tweets_with_sentiment = tweets_with_sentiment.dropDuplicates(["tweet_nettoyé"])
 
-# Affichage des résultats
-display(unique_tweets_with_sentiment)
-
 #Insertion des données dans une table pour rapport POWER BI
 unique_tweets_with_sentiment.write.mode("overwrite").saveAsTable("analyse_de_sentiments")
+
+# Affichage des résultats
+display(unique_tweets_with_sentiment)

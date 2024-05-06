@@ -20,3 +20,5 @@ tweets_df = spark.createDataFrame(tweets_data, ["tweet"])
 
 # Écrire les données dans une table Delta
 tweets_df.write.mode("overwrite").format("delta").saveAsTable("tweets")
+
+display(tweets_df)
