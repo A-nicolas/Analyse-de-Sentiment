@@ -15,7 +15,7 @@ client = tweepy.Client(bearer_token="AAAAAAAAAAAAAAAAAAAAABHvtQEAAAAAZYZuSyP3Xt5
 
 query = "Vinicius lang:fr -is:retweet -is:reply"
 
-tweets_fr = client.search_recent_tweets(query=query, tweet_fields=['text'], max_results=10)
+tweets_fr = client.search_recent_tweets(query=query, tweet_fields=['text'], max_results=20)
 
 # COMMAND ----------
 
