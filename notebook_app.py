@@ -19,7 +19,7 @@ tweets_fr = client.search_recent_tweets(query=query, tweet_fields=['text'], max_
 
 # COMMAND ----------
 
-# DBTITLE 1,Ingestion, nettoyage et analyse des données
+# DBTITLE 1,Ingestion et sauvegarde en base de données
 # Création de la session Spark
 spark = SparkSession.builder \
     .appName("Analyse de Sentiments") \
@@ -28,6 +28,28 @@ spark = SparkSession.builder \
 # Chargement des tweets dans un DataFrame Spark
 tweets_data = [(tweet.text,) for tweet in tweets_fr.data]
 tweets_df = spark.createDataFrame(tweets_data, ["tweet"])
+
+# Écrire les données dans une table Delta
+tweets_df.write.mode("overwrite").format("delta").saveAsTable("tweets")
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC
+# MAGIC SELECT *
+# MAGIC FROM tweets
+
+# COMMAND ----------
+
+# DBTITLE 1,Ingestion, nettoyage et analyse des données
+# # Création de la session Spark
+# spark = SparkSession.builder \
+#     .appName("Analyse de Sentiments") \
+#     .getOrCreate()
+    
+# # Chargement des tweets dans un DataFrame Spark
+# tweets_data = [(tweet.text,) for tweet in tweets_fr.data]
+# tweets_df = spark.createDataFrame(tweets_data, ["tweet"])
 
 # Application des fonctions de nettoyage et de prétraitement
 clean_tweet_udf = udf(clean_tweet, StringType())
@@ -45,5 +67,5 @@ tweets_with_sentiment = preprocessed_tweets_df.withColumn("sentiment", sentiment
 # Affichage des résultats
 display(tweets_with_sentiment)
 
-#Insertion des données dans une table
+#Insertion des données dans une table pour rapport POWER BI
 tweets_with_sentiment.write.mode("overwrite").saveAsTable("analyse_de_sentiments")
