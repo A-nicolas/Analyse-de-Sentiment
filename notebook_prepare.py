@@ -26,10 +26,13 @@ tokenized_tweets_df = tokenizer.transform(cleaned_tweets_df)
 remover = StopWordsRemover(inputCol="tweet_tokenisé", outputCol="token_filtré", stopWords=StopWordsRemover.loadDefaultStopWords("french"))
 preprocessed_tweets_df = remover.transform(tokenized_tweets_df)
 
-# Écriture des données dans une table Delta
-preprocessed_tweets_df.write.mode("overwrite").format("delta").saveAsTable("tweets_prepares")
+# Supprimer les doublons avant d'insérer dans la table
+unique_preprocessed_tweets_df = preprocessed_tweets_df.dropDuplicates(["tweet_nettoyé"])
 
-display(preprocessed_tweets_df)
+# Écriture des données dans une table Delta
+unique_preprocessed_tweets_df.write.mode("overwrite").format("delta").saveAsTable("tweets_prepares")
+
+display(unique_preprocessed_tweets_df)
 
 # COMMAND ----------
 
