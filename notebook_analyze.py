@@ -1,5 +1,5 @@
 # Databricks notebook source
-pip install pyspark textblob
+pip install pyspark textblob textblob-fr
 
 # COMMAND ----------
 
@@ -7,13 +7,14 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import udf
 from pyspark.sql.types import StringType
 from textblob import TextBlob
+from textblob_fr import PatternTagger, PatternAnalyzer
 
 # COMMAND ----------
 
 
 def analyze_sentiment(tweet):
-    blob = TextBlob(tweet)
-    sentiment = blob.sentiment.polarity
+    blob = TextBlob(tweet, pos_tagger=PatternTagger(), analyzer=PatternAnalyzer())
+    sentiment = blob.sentiment[0]
     if sentiment > 0:
         return "positif"
     elif sentiment < 0:
@@ -41,3 +42,8 @@ unique_tweets_with_sentiment.write.mode("overwrite").saveAsTable("analyse_de_sen
 
 # Affichage des résultats
 display(unique_tweets_with_sentiment)
+
+# COMMAND ----------
+
+tweets_df_demo = spark.read.table("analyse_de_sentiments")
+display(tweets_df_demo)

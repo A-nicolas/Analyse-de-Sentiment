@@ -30,3 +30,9 @@ preprocessed_tweets_df = remover.transform(tokenized_tweets_df)
 preprocessed_tweets_df.write.mode("overwrite").format("delta").saveAsTable("tweets_prepares")
 
 display(preprocessed_tweets_df)
+
+# COMMAND ----------
+
+# DBTITLE 1,Démo data
+tweets_df_demo = spark.read.table("tweets_prepares")
+display(tweets_df_demo)

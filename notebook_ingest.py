@@ -27,3 +27,9 @@ tweets_df = spark.createDataFrame(tweets_data, ["tweet"])
 tweets_df.write.mode("overwrite").format("delta").saveAsTable("tweets")
 
 display(tweets_df)
+
+# COMMAND ----------
+
+# DBTITLE 1,Démo data ingest
+tweets_df_demo = spark.read.table("tweets")
+display(tweets_df_demo)
