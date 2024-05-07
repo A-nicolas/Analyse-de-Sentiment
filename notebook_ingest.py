@@ -7,10 +7,15 @@ import tweepy
 
 # COMMAND ----------
 
-# Connexion à l'API de Twitter
-client = tweepy.Client(bearer_token="AAAAAAAAAAAAAAAAAAAAABHvtQEAAAAAZYZuSyP3Xt5GNPVE8SDaFL8km%2FE%3DHWxI0NcvZzQYB28eJummwmZ8zfb20lLBMHkpzERg4oLF9tFktq")
+# DBTITLE 1,Collecte des données
+# Récupérer le bearer token depuis les secrets Databricks
+bearer_token_secret = dbutils.secrets.get(scope="twitter-api", key="bearer_token")
+bearer_token = str(bearer_token_secret)
 
-query = "Zhegrova lang:fr -is:retweet -is:reply"
+# Connexion à l'API de Twitter
+client = tweepy.Client(bearer_token=bearer_token)
+
+query = "#MetGala lang:fr -is:retweet -is:reply"
 
 tweets_fr = client.search_recent_tweets(query=query, tweet_fields=['text'], max_results=20)
 
